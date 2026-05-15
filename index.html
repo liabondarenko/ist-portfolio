@@ -37,7 +37,6 @@
     overflow-x: hidden;
   }
 
-  /* ===== AMBIENT BG ===== */
   body::before {
     content: '';
     position: fixed;
@@ -50,7 +49,6 @@
     z-index: 0;
   }
 
-  /* ===== LAYOUT ===== */
   .wrap {
     position: relative;
     z-index: 1;
@@ -66,6 +64,12 @@
     align-items: center;
     padding: 16px 0;
     border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+    flex-wrap: wrap;
+    gap: 16px;
   }
   nav.top .brand {
     font-family: 'Instrument Serif', serif;
@@ -83,10 +87,50 @@
     text-transform: uppercase;
   }
 
+  .pnav {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .pnav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    position: relative;
+    padding: 4px 0;
+    transition: color 0.2s ease;
+  }
+  .pnav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .pnav a:hover { color: var(--accent); }
+  .pnav a:hover::after { width: 100%; }
+  .pnav .num {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    color: var(--ink-mute);
+    margin-right: 4px;
+    font-size: 12px;
+  }
+
   /* ===== HERO ===== */
   header.hero {
-    padding: 24px 0 32px;
-    max-width: 980px;
+    min-height: calc(100vh - 60px);
+    padding: 32px 0 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .eyebrow {
     display: inline-flex;
@@ -109,22 +153,23 @@
   h1.title {
     font-family: 'Instrument Serif', serif;
     font-weight: 400;
-    font-size: clamp(48px, 7vw, 96px);
-    line-height: 0.98;
+    font-size: clamp(44px, 6.4vw, 88px);
+    line-height: 1.02;
     letter-spacing: -0.025em;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
     opacity: 0;
     animation: fadeUp 1s 0.2s forwards;
+    max-width: 100%;
   }
   h1.title em {
     font-style: italic;
     color: var(--accent);
   }
   .lead {
-    font-size: clamp(15px, 1.15vw, 18px);
+    font-size: clamp(15px, 1.2vw, 18px);
     line-height: 1.5;
     color: var(--ink-soft);
-    max-width: min(880px, 90%);
+    max-width: min(960px, 95%);
     opacity: 0;
     animation: fadeUp 1s 0.35s forwards;
   }
@@ -134,16 +179,16 @@
     display: flex;
     gap: 64px;
     flex-wrap: wrap;
-    padding: 36px 0;
+    padding: 32px 0;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    margin-bottom: 60px;
+    margin-bottom: 80px;
     opacity: 0;
     animation: fadeUp 1s 0.5s forwards;
   }
   .stat .num {
     font-family: 'Instrument Serif', serif;
-    font-size: 48px;
+    font-size: 44px;
     line-height: 1;
     letter-spacing: -0.02em;
   }
@@ -167,13 +212,13 @@
     grid-template-columns: 1fr 1.4fr;
     gap: 56px;
     align-items: start;
+    scroll-margin-top: 100px;
   }
-
   .project.flip { grid-template-columns: 1.4fr 1fr; }
   .project.flip .info { order: 2; }
   .project.flip .preview { order: 1; }
 
-  .info { padding-top: 24px; position: sticky; top: 40px; }
+  .info { padding-top: 24px; position: sticky; top: 100px; }
 
   .pnum {
     font-family: 'Instrument Serif', serif;
@@ -258,17 +303,11 @@
     transform: translateY(-2px);
     background: var(--accent);
   }
-  .btn .arrow {
-    transition: transform 0.3s ease;
-  }
-  .btn:hover .arrow {
-    transform: translate(3px, -3px);
-  }
+  .btn .arrow { transition: transform 0.3s ease; }
+  .btn:hover .arrow { transform: translate(3px, -3px); }
 
-  /* ===== PREVIEW BLOCK ===== */
-  .preview {
-    position: relative;
-  }
+  /* ===== PREVIEW ===== */
+  .preview { position: relative; }
 
   .browser {
     background: var(--bg-card);
@@ -276,8 +315,9 @@
     box-shadow: var(--shadow-md);
     overflow: hidden;
     transition: box-shadow 0.5s ease, transform 0.5s ease;
+    cursor: pointer;
   }
-  .preview:hover .browser {
+  .browser:hover {
     box-shadow: var(--shadow-lg);
     transform: translateY(-4px);
   }
@@ -305,6 +345,27 @@
     color: var(--ink-mute);
     font-family: 'Albert Sans', monospace;
     letter-spacing: 0.02em;
+    flex: 1;
+  }
+  .browser-hint {
+    font-size: 11px;
+    color: var(--ink-mute);
+    background: var(--bg);
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--line);
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .browser:hover .browser-hint {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .browser-content.playing ~ .browser-bar .browser-hint,
+  .browser:has(.playing) .browser-hint {
+    color: var(--accent);
   }
 
   .browser-content {
@@ -315,10 +376,12 @@
   .browser-content img {
     width: 100%;
     display: block;
-    transition: transform 8s linear;
+    transform: translateY(0);
+    will-change: transform;
   }
-  .preview:hover .browser-content.scroll img {
-    transform: translateY(calc(-100% + 480px));
+  .browser-content.playing img {
+    transition: transform var(--scroll-duration, 12s) linear;
+    transform: translateY(var(--scroll-end, -50%));
   }
   .browser-content::after {
     content: '';
@@ -331,8 +394,29 @@
     pointer-events: none;
     opacity: 0.6;
   }
+  .play-indicator {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(26, 26, 26, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 2;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+  .browser-content.playing .play-indicator {
+    opacity: 0;
+    transform: scale(0.7);
+  }
 
-  /* Small previews row */
+  /* Thumbs */
   .thumbs {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -371,13 +455,12 @@
     letter-spacing: 0.03em;
     backdrop-filter: blur(4px);
   }
-  /* Accent colors per project */
+
   .project[data-accent="wine"]   { --proj: #6d2e46; }
   .project[data-accent="bakery"] { --proj: #d97894; }
   .project[data-accent="block"]  { --proj: #5b46d6; }
   .project[data-accent="game"]   { --proj: #3a5f8a; }
   .project[data-accent="lang"]   { --proj: #5b58e0; }
-
   .ptag { border-color: var(--proj); color: var(--proj); }
 
   /* ===== LIGHTBOX ===== */
@@ -468,10 +551,7 @@
     border-radius: 50%;
     background: var(--accent);
   }
-  .lb-screen img {
-    width: 100%;
-    display: block;
-  }
+  .lb-screen img { width: 100%; display: block; }
 
   /* ===== FOOTER ===== */
   footer {
@@ -491,6 +571,8 @@
   footer .left em {
     display: block;
     margin-top: 4px;
+    color: var(--accent);
+    font-style: italic;
   }
   footer .right {
     font-size: 13px;
@@ -498,7 +580,6 @@
     text-align: right;
   }
 
-  /* ===== ANIMATIONS ===== */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -515,8 +596,14 @@
   }
 
   /* ===== RESPONSIVE ===== */
+  @media (max-width: 1100px) {
+    .pnav { gap: 16px; }
+    .pnav a { font-size: 12px; }
+  }
   @media (max-width: 900px) {
     .wrap { padding: 0 20px; }
+    nav.top { position: static; }
+    .pnav { width: 100%; justify-content: flex-start; gap: 14px; order: 3; padding-top: 4px; }
     .project, .project.flip {
       grid-template-columns: 1fr;
       gap: 32px;
@@ -526,8 +613,8 @@
     .info { position: static; padding-top: 0; }
     .projects { gap: 80px; padding-bottom: 80px; }
     .ptitle { font-size: 36px; }
-    header.hero { padding: 60px 0 40px; }
-    .stats { gap: 32px; padding: 32px 0; }
+    header.hero { min-height: auto; padding: 60px 0 40px; }
+    .stats { gap: 32px; padding: 24px 0; margin-bottom: 60px; }
     .stat .num { font-size: 36px; }
     .browser-content { height: 360px; }
     .thumbs { grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -536,8 +623,12 @@
     footer .right { text-align: left; }
   }
   @media (max-width: 520px) {
-    h1.title { font-size: 44px; }
+    h1.title { font-size: 40px; }
     .thumbs { grid-template-columns: repeat(2, 1fr); }
+    .pnav { gap: 10px; }
+    .pnav a { font-size: 11px; }
+    .pnav .num { display: none; }
+    .browser-hint { display: none; }
   }
 </style>
 </head>
@@ -547,12 +638,19 @@
 
   <nav class="top">
     <div class="brand">Кафедра <em>ІСТ</em></div>
-    <div class="meta">КНУ ЕХРО · 2026</div>
+    <div class="pnav">
+      <a href="#p-craftwine"><span class="num">01</span>Craft Wine</a>
+      <a href="#p-vanilique"><span class="num">02</span>Vanilique</a>
+      <a href="#p-blockcore"><span class="num">03</span>BlockCore</a>
+      <a href="#p-gameport"><span class="num">04</span>GamePort</a>
+      <a href="#p-polyglotica"><span class="num">05</span>Polyglotica</a>
+    </div>
+    <div class="meta">КНУ EXPO · 2026</div>
   </nav>
 
   <header class="hero">
     <div class="eyebrow">Студентські проєкти · UI / UX</div>
-    <h1 class="title">Цифрові інтерфейси, створені <br><em>студентами</em>нашої кафедри.</h1>
+    <h1 class="title">Цифрові інтерфейси, створені <em>студентами</em> нашої кафедри.</h1>
     <p class="lead">Добірка веб-проєктів з курсу проєктування інтерфейсів — від винного бутіку та кондитерської до освітніх платформ і блокчейн-порталу. Кожна робота — від концепції до фінального макета.</p>
   </header>
 
@@ -578,7 +676,7 @@
   <main class="projects">
 
     <!-- PROJECT 1: CRAFT WINE -->
-    <article class="project reveal" data-accent="wine">
+    <article class="project reveal" id="p-craftwine" data-accent="wine">
       <div class="info">
         <span class="pnum">Проєкт 01</span>
         <span class="ptag">E-commerce · вино</span>
@@ -596,13 +694,17 @@
       </div>
 
       <div class="preview">
-        <div class="browser">
+        <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
             <span class="browser-url">craftwine.ua / каталог</span>
+            <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
-          <div class="browser-content scroll">
+          <div class="browser-content" data-scroll>
             <img src="images/craftwine-1.jpg" alt="Craft Wine — каталог" loading="lazy">
+            <div class="play-indicator">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 2 L11 7 L4 12 Z" fill="currentColor"/></svg>
+            </div>
           </div>
         </div>
         <div class="thumbs">
@@ -615,15 +717,19 @@
     </article>
 
     <!-- PROJECT 2: VANILIQUE -->
-    <article class="project flip reveal" data-accent="bakery">
+    <article class="project flip reveal" id="p-vanilique" data-accent="bakery">
       <div class="preview">
-        <div class="browser">
+        <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
             <span class="browser-url">vanilique.com / home</span>
+            <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
-          <div class="browser-content scroll">
+          <div class="browser-content" data-scroll>
             <img src="images/vanilique-1.jpg" alt="Vanilique — лендінг" loading="lazy">
+            <div class="play-indicator">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 2 L11 7 L4 12 Z" fill="currentColor"/></svg>
+            </div>
           </div>
         </div>
         <div class="thumbs">
@@ -651,7 +757,7 @@
     </article>
 
     <!-- PROJECT 3: BLOCKCORE -->
-    <article class="project reveal" data-accent="block">
+    <article class="project reveal" id="p-blockcore" data-accent="block">
       <div class="info">
         <span class="pnum">Проєкт 03</span>
         <span class="ptag">Edu · Web3</span>
@@ -669,13 +775,17 @@
       </div>
 
       <div class="preview">
-        <div class="browser">
+        <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
             <span class="browser-url">blockcore.io / blockchain-basics</span>
+            <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
-          <div class="browser-content scroll">
+          <div class="browser-content" data-scroll>
             <img src="images/blockcore-1.jpg" alt="BlockCore — basics" loading="lazy">
+            <div class="play-indicator">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 2 L11 7 L4 12 Z" fill="currentColor"/></svg>
+            </div>
           </div>
         </div>
         <div class="thumbs">
@@ -687,15 +797,19 @@
     </article>
 
     <!-- PROJECT 4: GAMEPORT -->
-    <article class="project flip reveal" data-accent="game">
+    <article class="project flip reveal" id="p-gameport" data-accent="game">
       <div class="preview">
-        <div class="browser">
+        <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
             <span class="browser-url">gameport.app / home</span>
+            <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
-          <div class="browser-content scroll">
+          <div class="browser-content" data-scroll>
             <img src="images/gameport-1.jpg" alt="GamePort — home" loading="lazy">
+            <div class="play-indicator">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 2 L11 7 L4 12 Z" fill="currentColor"/></svg>
+            </div>
           </div>
         </div>
         <div class="thumbs">
@@ -724,7 +838,7 @@
     </article>
 
     <!-- PROJECT 5: POLYGLOTICA -->
-    <article class="project reveal" data-accent="lang">
+    <article class="project reveal" id="p-polyglotica" data-accent="lang">
       <div class="info">
         <span class="pnum">Проєкт 05</span>
         <span class="ptag">EdTech · мови</span>
@@ -742,13 +856,17 @@
       </div>
 
       <div class="preview">
-        <div class="browser">
+        <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
             <span class="browser-url">polyglotica.com / let's talk</span>
+            <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
-          <div class="browser-content scroll">
+          <div class="browser-content" data-scroll>
             <img src="images/polyglotica-1.jpg" alt="Polyglotica — landing" loading="lazy">
+            <div class="play-indicator">
+              <svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 2 L11 7 L4 12 Z" fill="currentColor"/></svg>
+            </div>
           </div>
         </div>
         <div class="thumbs">
@@ -763,11 +881,11 @@
 
   <footer>
     <div class="left">
-      Цікавить веброзробка та проєктування інтерфейсів?<br>
-      <em style="color: var(--accent); font-style: italic;">Долучайтеся до ОПП "Технології веброзробки та вебдизайн".</em>
+      Цікавить веброзробка та проєктування інтерфейсів?
+      <em>Долучайтеся до ОПП "Технології веброзробки та вебдизайн".</em>
     </div>
     <div class="right">
-      Створено для КНУ ЕХРО<br>
+      Створено для КНУ EXPO<br>
       Кафедра ІСТ · 2026
     </div>
   </footer>
@@ -786,7 +904,6 @@
 </div>
 
 <script>
-  // Project data
   const PROJECTS = {
     craftwine: {
       title: 'Craft Wine — всі екрани',
@@ -865,17 +982,71 @@
     document.body.style.overflow = '';
   }
 
-  // ESC closes
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeLightbox();
   });
 
-  // click on backdrop closes
   document.getElementById('lightbox').addEventListener('click', e => {
     if (e.target.id === 'lightbox') closeLightbox();
   });
 
-  // Scroll reveal
+  // ============ NORMALIZED SCROLL PREVIEW ============
+  // Same pixels-per-second across all previews, regardless of screenshot height.
+  const PIXELS_PER_SEC = 160;
+  const VIEWPORT_HEIGHT = 480;
+
+  document.querySelectorAll('[data-preview]').forEach(browser => {
+    const content = browser.querySelector('[data-scroll]');
+    const img = content.querySelector('img');
+    const hint = browser.querySelector('.browser-hint');
+
+    function setupSpeed() {
+      const imgHeight = img.getBoundingClientRect().height;
+      const scrollDistance = Math.max(0, imgHeight - VIEWPORT_HEIGHT);
+      if (scrollDistance <= 0) return false;
+      const duration = scrollDistance / PIXELS_PER_SEC;
+      content.style.setProperty('--scroll-duration', duration + 's');
+      content.style.setProperty('--scroll-end', `-${scrollDistance}px`);
+      return true;
+    }
+
+    if (img.complete) setupSpeed();
+    else img.addEventListener('load', setupSpeed);
+    window.addEventListener('resize', () => {
+      if (!content.classList.contains('playing')) setupSpeed();
+    });
+
+    let playing = false;
+
+    browser.addEventListener('click', e => {
+      if (e.target.closest('.thumb')) return; // safety
+      if (!setupSpeed()) return;
+
+      if (!playing) {
+        // start: reset to top, then play
+        content.classList.remove('playing');
+        void content.offsetWidth; // reflow
+        content.classList.add('playing');
+        playing = true;
+        if (hint) hint.textContent = '■ зупинити';
+      } else {
+        // stop: reset to top
+        content.classList.remove('playing');
+        playing = false;
+        if (hint) hint.textContent = '▶ клік для прокрутки';
+      }
+    });
+
+    img.addEventListener('transitionend', () => {
+      if (content.classList.contains('playing')) {
+        content.classList.remove('playing');
+        playing = false;
+        if (hint) hint.textContent = '↻ ще раз';
+      }
+    });
+  });
+
+  // ============ SCROLL REVEAL ============
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -885,6 +1056,25 @@
     });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ============ ACTIVE NAV HIGHLIGHT ============
+  const navLinks = document.querySelectorAll('.pnav a');
+  const sections = Array.from(navLinks).map(a => document.querySelector(a.getAttribute('href')));
+  const navIo = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        navLinks.forEach(l => {
+          if (l.getAttribute('href') === '#' + id) {
+            l.style.color = 'var(--accent)';
+          } else {
+            l.style.color = '';
+          }
+        });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => { if (s) navIo.observe(s); });
 </script>
 
 </body>

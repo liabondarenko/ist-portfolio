@@ -23,6 +23,22 @@
     --radius: 24px;
   }
 
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14110f;
+      --bg-card: #1f1b18;
+      --ink: #f3ede4;
+      --ink-soft: #b8aea2;
+      --ink-mute: #807468;
+      --line: #2e2a25;
+      --accent: #e07a62;
+      --accent-soft: #3a2520;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.3);
+      --shadow-lg: 0 24px 60px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.35);
+    }
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html { scroll-behavior: smooth; }
@@ -47,6 +63,14 @@
       radial-gradient(700px 500px at 60% 100%, rgba(180,160,120,0.05), transparent 60%);
     pointer-events: none;
     z-index: 0;
+  }
+  @media (prefers-color-scheme: dark) {
+    body::before {
+      background:
+        radial-gradient(900px 600px at 80% -10%, rgba(224,122,98,0.08), transparent 60%),
+        radial-gradient(800px 500px at -10% 50%, rgba(120,140,180,0.05), transparent 60%),
+        radial-gradient(700px 500px at 60% 100%, rgba(160,140,100,0.04), transparent 60%);
+    }
   }
 
   .wrap {
@@ -173,25 +197,30 @@
   /* ===== STATS ROW ===== */
   .stats {
     display: flex;
-    gap: 64px;
+    justify-content: space-between;
+    gap: 32px;
     flex-wrap: wrap;
     padding: 32px 0;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    margin-bottom: 80px;
+    margin-bottom: 140px;
     opacity: 0;
     animation: fadeUp 1s 0.5s forwards;
   }
+  .stat {
+    flex: 1 1 0;
+    min-width: 140px;
+  }
   .stat .num {
     font-family: 'Instrument Serif', serif;
-    font-size: 44px;
+    font-size: 48px;
     line-height: 1;
     letter-spacing: -0.02em;
   }
   .stat .label {
     font-size: 13px;
     color: var(--ink-mute);
-    margin-top: 6px;
+    margin-top: 8px;
     letter-spacing: 0.03em;
   }
 
@@ -718,7 +747,7 @@
         <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            <span class="browser-url">vanilique.com / home</span>
+            <span class="browser-url">vanilique.com / головна</span>
             <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
           <div class="browser-content" data-scroll>
@@ -774,7 +803,7 @@
         <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            <span class="browser-url">blockcore.io / blockchain-basics</span>
+            <span class="browser-url">blockcore.io / основи</span>
             <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
           <div class="browser-content" data-scroll>
@@ -785,9 +814,9 @@
           </div>
         </div>
         <div class="thumbs">
-          <div class="thumb" onclick="openLightbox('blockcore', 0)"><img src="images/blockcore-1-hero.jpg" alt=""><div class="thumb-label">Basics</div></div>
-          <div class="thumb" onclick="openLightbox('blockcore', 1)"><img src="images/blockcore-2-hero.jpg" alt=""><div class="thumb-label">Team</div></div>
-          <div class="thumb" onclick="openLightbox('blockcore', 2)"><img src="images/blockcore-3-hero.jpg" alt=""><div class="thumb-label">Community</div></div>
+          <div class="thumb" onclick="openLightbox('blockcore', 0)"><img src="images/blockcore-1-hero.jpg" alt=""><div class="thumb-label">Основи</div></div>
+          <div class="thumb" onclick="openLightbox('blockcore', 1)"><img src="images/blockcore-2-hero.jpg" alt=""><div class="thumb-label">Команда</div></div>
+          <div class="thumb" onclick="openLightbox('blockcore', 2)"><img src="images/blockcore-3-hero.jpg" alt=""><div class="thumb-label">Спільнота</div></div>
         </div>
       </div>
     </article>
@@ -798,7 +827,7 @@
         <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            <span class="browser-url">gameport.app / home</span>
+            <span class="browser-url">gameport.app / головна</span>
             <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
           <div class="browser-content" data-scroll>
@@ -809,8 +838,8 @@
           </div>
         </div>
         <div class="thumbs">
-          <div class="thumb" onclick="openLightbox('gameport', 0)"><img src="images/gameport-1-hero.jpg" alt=""><div class="thumb-label">Home</div></div>
-          <div class="thumb" onclick="openLightbox('gameport', 1)"><img src="images/gameport-2-hero.jpg" alt=""><div class="thumb-label">Login</div></div>
+          <div class="thumb" onclick="openLightbox('gameport', 0)"><img src="images/gameport-1-hero.jpg" alt=""><div class="thumb-label">Головна</div></div>
+          <div class="thumb" onclick="openLightbox('gameport', 1)"><img src="images/gameport-2-hero.jpg" alt=""><div class="thumb-label">Вхід</div></div>
           <div class="thumb" onclick="openLightbox('gameport', 2)"><img src="images/gameport-3-hero.jpg" alt=""><div class="thumb-label">Каталог</div></div>
           <div class="thumb" onclick="openLightbox('gameport', 3)"><img src="images/gameport-4-hero.jpg" alt=""><div class="thumb-label">Новини</div></div>
         </div>
@@ -855,7 +884,7 @@
         <div class="browser" data-preview>
           <div class="browser-bar">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            <span class="browser-url">polyglotica.com / let's talk</span>
+            <span class="browser-url">polyglotica.com / поговорімо</span>
             <span class="browser-hint">▶ клік для прокрутки</span>
           </div>
           <div class="browser-content" data-scroll>

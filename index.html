@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Студентські проєкти · UI/UX портфоліо</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Albert+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f3ee;
+    --bg-card: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #5a5651;
+    --ink-mute: #908a82;
+    --line: #e4ddd2;
+    --accent: #c8553d;
+    --accent-soft: #f5e6df;
+    --shadow-sm: 0 1px 2px rgba(20,15,10,0.04), 0 2px 6px rgba(20,15,10,0.03);
+    --shadow-md: 0 4px 12px rgba(20,15,10,0.06), 0 12px 32px rgba(20,15,10,0.06);
+    --shadow-lg: 0 24px 60px rgba(20,15,10,0.12), 0 8px 20px rgba(20,15,10,0.08);
+    --radius: 24px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Albert Sans', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ===== AMBIENT BG ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(900px 600px at 80% -10%, rgba(200,85,61,0.07), transparent 60%),
+      radial-gradient(800px 500px at -10% 50%, rgba(140,170,200,0.06), transparent 60%),
+      radial-gradient(700px 500px at 60% 100%, rgba(180,160,120,0.05), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== LAYOUT ===== */
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ===== NAV ===== */
+  nav.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  nav.top .brand {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  nav.top .brand em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  nav.top .meta {
+    font-size: 13px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ===== HERO ===== */
+  header.hero {
+    padding: 120px 0 80px;
+    max-width: 980px;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.1s forwards;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--ink-soft);
+  }
+  h1.title {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeUp 1s 0.2s forwards;
+  }
+  h1.title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .lead {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 620px;
+    opacity: 0;
+    animation: fadeUp 1s 0.35s forwards;
+  }
+
+  /* ===== STATS ROW ===== */
+  .stats {
+    display: flex;
+    gap: 64px;
+    flex-wrap: wrap;
+    padding: 48px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 100px;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+  .stat .num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .stat .label {
+    font-size: 13px;
+    color: var(--ink-mute);
+    margin-top: 6px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ===== PROJECT CARDS ===== */
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+    padding-bottom: 140px;
+  }
+
+  .project {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .project.flip { grid-template-columns: 1.4fr 1fr; }
+  .project.flip .info { order: 2; }
+  .project.flip .preview { order: 1; }
+
+  .info { padding-top: 24px; position: sticky; top: 40px; }
+
+  .pnum {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-mute);
+    margin-bottom: 24px;
+    display: block;
+  }
+  .pnum::before { content: '· '; opacity: 0.6; }
+
+  .ptitle {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-size: 48px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .ptag {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+  .pdesc {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+    max-width: 420px;
+  }
+  .pmeta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+    font-size: 14px;
+  }
+  .pmeta .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .pmeta .row span:first-child {
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    align-self: center;
+  }
+  .pmeta .row span:last-child {
+    text-align: right;
+    max-width: 60%;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease;
+    font-family: inherit;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    background: var(--accent);
+  }
+  .btn .arrow {
+    transition: transform 0.3s ease;
+  }
+  .btn:hover .arrow {
+    transform: translate(3px, -3px);
+  }
+
+  /* ===== PREVIEW BLOCK ===== */
+  .preview {
+    position: relative;
+  }
+
+  .browser {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: box-shadow 0.5s ease, transform 0.5s ease;
+  }
+  .preview:hover .browser {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+  }
+
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.02), transparent);
+  }
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #e2dcd2;
+  }
+  .dot:nth-child(1) { background: #f5a89c; }
+  .dot:nth-child(2) { background: #f5d29c; }
+  .dot:nth-child(3) { background: #a8d5a8; }
+  .browser-url {
+    margin-left: 16px;
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-family: 'Albert Sans', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  .browser-content {
+    height: 480px;
+    overflow: hidden;
+    position: relative;
+  }
+  .browser-content img {
+    width: 100%;
+    display: block;
+    transition: transform 8s linear;
+  }
+  .preview:hover .browser-content.scroll img {
+    transform: translateY(calc(-100% + 480px));
+  }
+  .browser-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(transparent, var(--bg-card));
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* Small previews row */
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .thumb {
+    aspect-ratio: 4/3;
+    background: var(--bg-card);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+  .thumb:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .thumb-label {
+    position: absolute;
+    bottom: 8px;
+    left: 10px;
+    font-size: 10px;
+    color: white;
+    background: rgba(0,0,0,0.6);
+    padding: 3px 8px;
+    border-radius: 100px;
+    letter-spacing: 0.03em;
+    backdrop-filter: blur(4px);
+  }
+  /* Accent colors per project */
+  .project[data-accent="wine"]   { --proj: #6d2e46; }
+  .project[data-accent="bakery"] { --proj: #d97894; }
+  .project[data-accent="block"]  { --proj: #5b46d6; }
+  .project[data-accent="game"]   { --proj: #3a5f8a; }
+  .project[data-accent="lang"]   { --proj: #5b58e0; }
+
+  .ptag { border-color: var(--proj); color: var(--proj); }
+
+  /* ===== LIGHTBOX ===== */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 12, 9, 0.92);
+    backdrop-filter: blur(20px);
+    z-index: 1000;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .lightbox.open {
+    display: flex;
+    opacity: 1;
+    flex-direction: column;
+  }
+  .lb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 40px;
+    color: rgba(255,255,255,0.9);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .lb-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+  }
+  .lb-close {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    font-family: inherit;
+  }
+  .lb-close:hover { background: rgba(255,255,255,0.16); }
+
+  .lb-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    scroll-behavior: smooth;
+  }
+  .lb-body::-webkit-scrollbar { width: 8px; }
+  .lb-body::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+  .lb-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+  .lb-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+  .lb-screen {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  }
+  .lb-screen-label {
+    padding: 16px 24px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .lb-screen-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .lb-screen img {
+    width: 100%;
+    display: block;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 60px 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  footer .left {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    line-height: 1.2;
+    max-width: 480px;
+  }
+  footer .right {
+    font-size: 13px;
+    color: var(--ink-mute);
+    text-align: right;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .wrap { padding: 0 20px; }
+    .project, .project.flip {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .project.flip .info { order: 1; }
+    .project.flip .preview { order: 2; }
+    .info { position: static; padding-top: 0; }
+    .projects { gap: 80px; padding-bottom: 80px; }
+    .ptitle { font-size: 36px; }
+    header.hero { padding: 60px 0 40px; }
+    .stats { gap: 32px; padding: 32px 0; }
+    .stat .num { font-size: 36px; }
+    .browser-content { height: 360px; }
+    .thumbs { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .lb-body { padding: 20px; }
+    footer { flex-direction: column; align-items: flex-start; }
+    footer .right { text-align: left; }
+  }
+  @media (max-width: 520px) {
+    h1.title { font-size: 44px; }
+    .thumbs { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="top">
+    <div class="brand">Кафедра <em>ІСТ</em></div>
+    <div class="meta">Day of Open Doors · 2026</div>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">Студентські проєкти · UI / UX</div>
+    <h1 class="title">Цифрові інтерфейси,<br>створені <em>студентами</em><br>нашої кафедри.</h1>
+    <p class="lead">Добірка веб-проєктів з курсу проєктування інтерфейсів — від винного бутіку та кондитерської до освітніх платформ і блокчейн-порталу. Кожна робота — від концепції до фінального макета.</p>
+  </header>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="num">5</div>
+      <div class="label">Проєктів</div>
+    </div>
+    <div class="stat">
+      <div class="num">17</div>
+      <div class="label">Екранів</div>
+    </div>
+    <div class="stat">
+      <div class="num">100%</div>
+      <div class="label">Авторських робіт</div>
+    </div>
+    <div class="stat">
+      <div class="num">Figma</div>
+      <div class="label">Інструмент</div>
+    </div>
+  </section>
+
+  <main class="projects">
+
+    <!-- PROJECT 1: CRAFT WINE -->
+    <article class="project reveal" data-accent="wine">
+      <div class="info">
+        <span class="pnum">Проєкт 01</span>
+        <span class="ptag">E-commerce · вино</span>
+        <h2 class="ptitle">Craft Wine</h2>
+        <p class="pdesc">Інтернет-магазин крафтового вина зі складною e-commerce логікою: каталог із сортуванням, кошик, обране, оформлення замовлення з варіантами доставки і оплати.</p>
+        <div class="pmeta">
+          <div class="row"><span>Тип</span><span>Інтернет-магазин</span></div>
+          <div class="row"><span>Екранів</span><span>4 (каталог, кошик, обране, замовлення)</span></div>
+          <div class="row"><span>Палітра</span><span>Тепла, винна</span></div>
+        </div>
+        <button class="btn" onclick="openLightbox('craftwine')">
+          Переглянути всі екрани
+          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="preview">
+        <div class="browser">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="browser-url">craftwine.ua / каталог</span>
+          </div>
+          <div class="browser-content scroll">
+            <img src="images/craftwine-1.jpg" alt="Craft Wine — каталог" loading="lazy">
+          </div>
+        </div>
+        <div class="thumbs">
+          <div class="thumb" onclick="openLightbox('craftwine', 0)"><img src="images/craftwine-1-hero.jpg" alt=""><div class="thumb-label">Каталог</div></div>
+          <div class="thumb" onclick="openLightbox('craftwine', 1)"><img src="images/craftwine-2-hero.jpg" alt=""><div class="thumb-label">Кошик</div></div>
+          <div class="thumb" onclick="openLightbox('craftwine', 2)"><img src="images/craftwine-3-hero.jpg" alt=""><div class="thumb-label">Обране</div></div>
+          <div class="thumb" onclick="openLightbox('craftwine', 3)"><img src="images/craftwine-4-hero.jpg" alt=""><div class="thumb-label">Замовлення</div></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 2: VANILIQUE -->
+    <article class="project flip reveal" data-accent="bakery">
+      <div class="preview">
+        <div class="browser">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="browser-url">vanilique.com / home</span>
+          </div>
+          <div class="browser-content scroll">
+            <img src="images/vanilique-1.jpg" alt="Vanilique — лендінг" loading="lazy">
+          </div>
+        </div>
+        <div class="thumbs">
+          <div class="thumb" onclick="openLightbox('vanilique', 0)"><img src="images/vanilique-1-hero.jpg" alt=""><div class="thumb-label">Головна</div></div>
+          <div class="thumb" onclick="openLightbox('vanilique', 1)"><img src="images/vanilique-2-hero.jpg" alt=""><div class="thumb-label">Про нас</div></div>
+          <div class="thumb" onclick="openLightbox('vanilique', 2)"><img src="images/vanilique-3-hero.jpg" alt=""><div class="thumb-label">Відгуки</div></div>
+        </div>
+      </div>
+
+      <div class="info">
+        <span class="pnum">Проєкт 02</span>
+        <span class="ptag">Кондитерська · branding</span>
+        <h2 class="ptitle">Vanilique</h2>
+        <p class="pdesc">Сайт пекарні-кондитерської з фокусом на естетику бренду: ніжна рожева палітра, типографіка з характером, тематичні зображення продукції. Розширений розділ відгуків з рейтингами і фото.</p>
+        <div class="pmeta">
+          <div class="row"><span>Тип</span><span>Сайт пекарні</span></div>
+          <div class="row"><span>Екранів</span><span>3 (home, about, reviews)</span></div>
+          <div class="row"><span>Палітра</span><span>Pink &amp; berry</span></div>
+        </div>
+        <button class="btn" onclick="openLightbox('vanilique')">
+          Переглянути всі екрани
+          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </article>
+
+    <!-- PROJECT 3: BLOCKCORE -->
+    <article class="project reveal" data-accent="block">
+      <div class="info">
+        <span class="pnum">Проєкт 03</span>
+        <span class="ptag">Edu · Web3</span>
+        <h2 class="ptitle">BlockCore</h2>
+        <p class="pdesc">Освітній портал про блокчейн і Web3. Темна тема з акцентами індиго, інформативні розділи про DeFi, NFT, логістику. Формат «пояснюємо складне просто» для новачків і експертів.</p>
+        <div class="pmeta">
+          <div class="row"><span>Тип</span><span>Освітня платформа</span></div>
+          <div class="row"><span>Екранів</span><span>3 (basics, team, community)</span></div>
+          <div class="row"><span>Палітра</span><span>Deep indigo / dark</span></div>
+        </div>
+        <button class="btn" onclick="openLightbox('blockcore')">
+          Переглянути всі екрани
+          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="preview">
+        <div class="browser">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="browser-url">blockcore.io / blockchain-basics</span>
+          </div>
+          <div class="browser-content scroll">
+            <img src="images/blockcore-1.jpg" alt="BlockCore — basics" loading="lazy">
+          </div>
+        </div>
+        <div class="thumbs">
+          <div class="thumb" onclick="openLightbox('blockcore', 0)"><img src="images/blockcore-1-hero.jpg" alt=""><div class="thumb-label">Basics</div></div>
+          <div class="thumb" onclick="openLightbox('blockcore', 1)"><img src="images/blockcore-2-hero.jpg" alt=""><div class="thumb-label">Team</div></div>
+          <div class="thumb" onclick="openLightbox('blockcore', 2)"><img src="images/blockcore-3-hero.jpg" alt=""><div class="thumb-label">Community</div></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJECT 4: GAMEPORT -->
+    <article class="project flip reveal" data-accent="game">
+      <div class="preview">
+        <div class="browser">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="browser-url">gameport.app / home</span>
+          </div>
+          <div class="browser-content scroll">
+            <img src="images/gameport-1.jpg" alt="GamePort — home" loading="lazy">
+          </div>
+        </div>
+        <div class="thumbs">
+          <div class="thumb" onclick="openLightbox('gameport', 0)"><img src="images/gameport-1-hero.jpg" alt=""><div class="thumb-label">Home</div></div>
+          <div class="thumb" onclick="openLightbox('gameport', 1)"><img src="images/gameport-2-hero.jpg" alt=""><div class="thumb-label">Login</div></div>
+          <div class="thumb" onclick="openLightbox('gameport', 2)"><img src="images/gameport-3-hero.jpg" alt=""><div class="thumb-label">Каталог</div></div>
+          <div class="thumb" onclick="openLightbox('gameport', 3)"><img src="images/gameport-4-hero.jpg" alt=""><div class="thumb-label">Новини</div></div>
+        </div>
+      </div>
+
+      <div class="info">
+        <span class="pnum">Проєкт 04</span>
+        <span class="ptag">Gaming · platform</span>
+        <h2 class="ptitle">GamePort</h2>
+        <p class="pdesc">Платформа для геймерів: каталог ігор з фільтрами по жанрах, цінах, платформах. Розділ новин, авторизація, профіль користувача. Чотири різні типи сторінок в єдиному стилі.</p>
+        <div class="pmeta">
+          <div class="row"><span>Тип</span><span>Ігровий портал</span></div>
+          <div class="row"><span>Екранів</span><span>4 (home, login, catalog, news)</span></div>
+          <div class="row"><span>Палітра</span><span>Cool blue-gray</span></div>
+        </div>
+        <button class="btn" onclick="openLightbox('gameport')">
+          Переглянути всі екрани
+          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </article>
+
+    <!-- PROJECT 5: POLYGLOTICA -->
+    <article class="project reveal" data-accent="lang">
+      <div class="info">
+        <span class="pnum">Проєкт 05</span>
+        <span class="ptag">EdTech · мови</span>
+        <h2 class="ptitle">Polyglotica</h2>
+        <p class="pdesc">Онлайн-сервіс для вивчення мов з персоналізованими планами, бібліотекою матеріалів (відео, аудіо, ігри, тести) і спілкуванням з носіями. Включає блок «наша команда» з QR для подачі резюме.</p>
+        <div class="pmeta">
+          <div class="row"><span>Тип</span><span>EdTech-платформа</span></div>
+          <div class="row"><span>Екранів</span><span>3 (landing, about, library)</span></div>
+          <div class="row"><span>Палітра</span><span>Indigo &amp; lavender</span></div>
+        </div>
+        <button class="btn" onclick="openLightbox('polyglotica')">
+          Переглянути всі екрани
+          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14"><path d="M3 11L11 3M11 3H5M11 3V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="preview">
+        <div class="browser">
+          <div class="browser-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="browser-url">polyglotica.com / let's talk</span>
+          </div>
+          <div class="browser-content scroll">
+            <img src="images/polyglotica-1.jpg" alt="Polyglotica — landing" loading="lazy">
+          </div>
+        </div>
+        <div class="thumbs">
+          <div class="thumb" onclick="openLightbox('polyglotica', 0)"><img src="images/polyglotica-1-hero.jpg" alt=""><div class="thumb-label">Лендінг</div></div>
+          <div class="thumb" onclick="openLightbox('polyglotica', 1)"><img src="images/polyglotica-2-hero.jpg" alt=""><div class="thumb-label">Про нас</div></div>
+          <div class="thumb" onclick="openLightbox('polyglotica', 2)"><img src="images/polyglotica-3-hero.jpg" alt=""><div class="thumb-label">Бібліотека</div></div>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <footer>
+    <div class="left">
+      Цікавить веб-розробка<br>та проєктування інтерфейсів?<br>
+      <em style="color: var(--accent); font-style: italic;">Долучайтеся до спеціальності.</em>
+    </div>
+    <div class="right">
+      Створено для Дня відкритих дверей<br>
+      Кафедра ІСТ · 2026
+    </div>
+  </footer>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-header">
+    <span class="lb-title" id="lb-title">Project</span>
+    <button class="lb-close" onclick="closeLightbox()" aria-label="Закрити">×</button>
+  </div>
+  <div class="lb-body" id="lb-body">
+    <div class="lb-grid" id="lb-grid"></div>
+  </div>
+</div>
+
+<script>
+  // Project data
+  const PROJECTS = {
+    craftwine: {
+      title: 'Craft Wine — всі екрани',
+      screens: [
+        { src: 'images/craftwine-1.jpg', label: 'Каталог' },
+        { src: 'images/craftwine-2.jpg', label: 'Кошик' },
+        { src: 'images/craftwine-3.jpg', label: 'Обране' },
+        { src: 'images/craftwine-4.jpg', label: 'Оформлення замовлення' },
+      ]
+    },
+    vanilique: {
+      title: 'Vanilique — всі екрани',
+      screens: [
+        { src: 'images/vanilique-1.jpg', label: 'Головна сторінка' },
+        { src: 'images/vanilique-2.jpg', label: 'Про нас' },
+        { src: 'images/vanilique-3.jpg', label: 'Відгуки' },
+      ]
+    },
+    blockcore: {
+      title: 'BlockCore — всі екрани',
+      screens: [
+        { src: 'images/blockcore-1.jpg', label: 'Blockchain Basics' },
+        { src: 'images/blockcore-2.jpg', label: 'Team' },
+        { src: 'images/blockcore-3.jpg', label: 'Community' },
+      ]
+    },
+    gameport: {
+      title: 'GamePort — всі екрани',
+      screens: [
+        { src: 'images/gameport-1.jpg', label: 'Головна сторінка' },
+        { src: 'images/gameport-2.jpg', label: 'Вхід / Login' },
+        { src: 'images/gameport-3.jpg', label: 'Каталог ігор' },
+        { src: 'images/gameport-4.jpg', label: 'Новини' },
+      ]
+    },
+    polyglotica: {
+      title: 'Polyglotica — всі екрани',
+      screens: [
+        { src: 'images/polyglotica-1.jpg', label: 'Лендінг "Let\'s talk together"' },
+        { src: 'images/polyglotica-2.jpg', label: 'Про нас та команда' },
+        { src: 'images/polyglotica-3.jpg', label: 'Бібліотека матеріалів' },
+      ]
+    },
+  };
+
+  function openLightbox(key, scrollToIdx) {
+    const proj = PROJECTS[key];
+    if (!proj) return;
+    document.getElementById('lb-title').textContent = proj.title;
+    const grid = document.getElementById('lb-grid');
+    grid.innerHTML = '';
+    proj.screens.forEach((s, i) => {
+      const div = document.createElement('div');
+      div.className = 'lb-screen';
+      div.id = 'screen-' + i;
+      div.innerHTML = `
+        <div class="lb-screen-label">${s.label}</div>
+        <img src="${s.src}" alt="${s.label}" loading="lazy">
+      `;
+      grid.appendChild(div);
+    });
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (typeof scrollToIdx === 'number') {
+      setTimeout(() => {
+        const t = document.getElementById('screen-' + scrollToIdx);
+        if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    } else {
+      document.getElementById('lb-body').scrollTop = 0;
+    }
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ESC closes
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // click on backdrop closes
+  document.getElementById('lightbox').addEventListener('click', e => {
+    if (e.target.id === 'lightbox') closeLightbox();
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

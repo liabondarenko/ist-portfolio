@@ -24,7 +24,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :root {
+    html:not([data-theme="light"]) {
       --bg: #14110f;
       --bg-card: #1f1b18;
       --ink: #f3ede4;
@@ -37,6 +37,19 @@
       --shadow-md: 0 4px 12px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.3);
       --shadow-lg: 0 24px 60px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.35);
     }
+  }
+  html[data-theme="dark"] {
+    --bg: #14110f;
+    --bg-card: #1f1b18;
+    --ink: #f3ede4;
+    --ink-soft: #b8aea2;
+    --ink-mute: #807468;
+    --line: #2e2a25;
+    --accent: #e07a62;
+    --accent-soft: #3a2520;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.35), 0 12px 32px rgba(0,0,0,0.3);
+    --shadow-lg: 0 24px 60px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.35);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,12 +78,18 @@
     z-index: 0;
   }
   @media (prefers-color-scheme: dark) {
-    body::before {
+    html:not([data-theme="light"]) body::before {
       background:
         radial-gradient(900px 600px at 80% -10%, rgba(224,122,98,0.08), transparent 60%),
         radial-gradient(800px 500px at -10% 50%, rgba(120,140,180,0.05), transparent 60%),
         radial-gradient(700px 500px at 60% 100%, rgba(160,140,100,0.04), transparent 60%);
     }
+  }
+  html[data-theme="dark"] body::before {
+    background:
+      radial-gradient(900px 600px at 80% -10%, rgba(224,122,98,0.08), transparent 60%),
+      radial-gradient(800px 500px at -10% 50%, rgba(120,140,180,0.05), transparent 60%),
+      radial-gradient(700px 500px at 60% 100%, rgba(160,140,100,0.04), transparent 60%);
   }
 
   .wrap {
@@ -111,6 +130,61 @@
     text-transform: uppercase;
   }
 
+  /* Theme toggle button */
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: rotate(15deg);
+  }
+  .theme-toggle svg {
+    width: 16px;
+    height: 16px;
+  }
+  .theme-toggle .icon-moon { display: none; }
+  .theme-toggle .icon-sun { display: block; }
+  html[data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+  html[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* Burger button (mobile only) */
+  .burger {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .burger svg { width: 16px; height: 16px; }
+
   .pnav {
     display: flex;
     gap: 24px;
@@ -150,7 +224,7 @@
 
   /* ===== HERO ===== */
   header.hero {
-    padding: 48px 0 40px;
+    padding: 72px 0 56px;
   }
   .eyebrow {
     display: inline-flex;
@@ -173,10 +247,10 @@
   h1.title {
     font-family: 'Instrument Serif', serif;
     font-weight: 400;
-    font-size: clamp(36px, 4.8vw, 64px);
+    font-size: clamp(40px, 5.4vw, 72px);
     line-height: 1.05;
     letter-spacing: -0.025em;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
     opacity: 0;
     animation: fadeUp 1s 0.2s forwards;
     max-width: 100%;
@@ -627,8 +701,42 @@
   }
   @media (max-width: 900px) {
     .wrap { padding: 0 20px; }
-    nav.top { position: static; }
-    .pnav { width: 100%; justify-content: flex-start; gap: 14px; order: 3; padding-top: 4px; }
+    nav.top {
+      position: sticky;
+      padding: 12px 0;
+      flex-wrap: nowrap;
+    }
+    nav.top .meta { display: none; }
+    .burger { display: inline-flex; }
+    .pnav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      background: var(--bg-card);
+      padding: 20px 24px 24px;
+      border-bottom: 1px solid var(--line);
+      box-shadow: var(--shadow-md);
+      gap: 14px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      transform: translateY(-12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      z-index: 99;
+    }
+    .pnav.open {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .pnav a {
+      font-size: 15px;
+      padding: 6px 0;
+    }
+    .pnav .num { font-size: 13px; }
     .project, .project.flip {
       grid-template-columns: 1fr;
       gap: 32px;
@@ -638,8 +746,9 @@
     .info { position: static; padding-top: 0; }
     .projects { gap: 80px; padding-bottom: 80px; }
     .ptitle { font-size: 36px; }
-    header.hero { min-height: auto; padding: 60px 0 40px; }
-    .stats { gap: 32px; padding: 24px 0; margin-bottom: 60px; }
+    header.hero { padding: 48px 0 40px; }
+    .stats { gap: 24px; padding: 24px 0; margin-bottom: 80px; }
+    .stat { min-width: 120px; }
     .stat .num { font-size: 36px; }
     .browser-content { height: 360px; }
     .thumbs { grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -648,14 +757,24 @@
     footer .right { text-align: left; }
   }
   @media (max-width: 520px) {
-    h1.title { font-size: 40px; }
+    h1.title { font-size: 36px; }
     .thumbs { grid-template-columns: repeat(2, 1fr); }
-    .pnav { gap: 10px; }
-    .pnav a { font-size: 11px; }
-    .pnav .num { display: none; }
     .browser-hint { display: none; }
+    .stat .num { font-size: 30px; }
+    .stat .label { font-size: 12px; }
   }
 </style>
+<script>
+  // Init theme before render to avoid FOUC
+  (function() {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || saved === 'light') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch(e) {}
+  })();
+</script>
 </head>
 <body>
 
@@ -663,14 +782,23 @@
 
   <nav class="top">
     <div class="brand">Кафедра <em>ІСТ</em></div>
-    <div class="pnav">
+    <div class="pnav" id="pnav">
       <a href="#p-craftwine"><span class="num">01</span>Craft Wine</a>
       <a href="#p-vanilique"><span class="num">02</span>Vanilique</a>
       <a href="#p-blockcore"><span class="num">03</span>BlockCore</a>
       <a href="#p-gameport"><span class="num">04</span>GamePort</a>
       <a href="#p-polyglotica"><span class="num">05</span>Polyglotica</a>
     </div>
-    <div class="meta">КНУ EXPO · 2026</div>
+    <div class="nav-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <div class="meta">КНУ EXPO · 2026</div>
+      <button class="burger" id="burger" aria-label="Меню">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
   </nav>
 
   <header class="hero">
@@ -771,8 +899,8 @@
         <p class="pdesc">Сайт пекарні-кондитерської з фокусом на естетику бренду: ніжна рожева палітра, типографіка з характером, тематичні зображення продукції. Розширений розділ відгуків з рейтингами і фото.</p>
         <div class="pmeta">
           <div class="row"><span>Тип</span><span>Сайт пекарні</span></div>
-          <div class="row"><span>Екранів</span><span>3 (home, about, reviews)</span></div>
-          <div class="row"><span>Палітра</span><span>Pink &amp; berry</span></div>
+          <div class="row"><span>Екранів</span><span>3 (головна, про нас, відгуки)</span></div>
+          <div class="row"><span>Палітра</span><span>Рожева, ягідна</span></div>
         </div>
         <button class="btn" onclick="openLightbox('vanilique')">
           Переглянути всі екрани
@@ -790,8 +918,8 @@
         <p class="pdesc">Освітній портал про блокчейн і Web3. Темна тема з акцентами індиго, інформативні розділи про DeFi, NFT, логістику. Формат «пояснюємо складне просто» для новачків і експертів.</p>
         <div class="pmeta">
           <div class="row"><span>Тип</span><span>Освітня платформа</span></div>
-          <div class="row"><span>Екранів</span><span>3 (basics, team, community)</span></div>
-          <div class="row"><span>Палітра</span><span>Deep indigo / dark</span></div>
+          <div class="row"><span>Екранів</span><span>3 (основи, команда, спільнота)</span></div>
+          <div class="row"><span>Палітра</span><span>Темна, індиго</span></div>
         </div>
         <button class="btn" onclick="openLightbox('blockcore')">
           Переглянути всі екрани
@@ -852,8 +980,8 @@
         <p class="pdesc">Платформа для геймерів: каталог ігор з фільтрами по жанрах, цінах, платформах. Розділ новин, авторизація, профіль користувача. Чотири різні типи сторінок в єдиному стилі.</p>
         <div class="pmeta">
           <div class="row"><span>Тип</span><span>Ігровий портал</span></div>
-          <div class="row"><span>Екранів</span><span>4 (home, login, catalog, news)</span></div>
-          <div class="row"><span>Палітра</span><span>Cool blue-gray</span></div>
+          <div class="row"><span>Екранів</span><span>4 (головна, вхід, каталог, новини)</span></div>
+          <div class="row"><span>Палітра</span><span>Холодна, синьо-сіра</span></div>
         </div>
         <button class="btn" onclick="openLightbox('gameport')">
           Переглянути всі екрани
@@ -871,8 +999,8 @@
         <p class="pdesc">Онлайн-сервіс для вивчення мов з персоналізованими планами, бібліотекою матеріалів (відео, аудіо, ігри, тести) і спілкуванням з носіями. Включає блок «наша команда» з QR для подачі резюме.</p>
         <div class="pmeta">
           <div class="row"><span>Тип</span><span>EdTech-платформа</span></div>
-          <div class="row"><span>Екранів</span><span>3 (landing, about, library)</span></div>
-          <div class="row"><span>Палітра</span><span>Indigo &amp; lavender</span></div>
+          <div class="row"><span>Екранів</span><span>3 (лендінг, про нас, бібліотека)</span></div>
+          <div class="row"><span>Палітра</span><span>Індиго та лаванда</span></div>
         </div>
         <button class="btn" onclick="openLightbox('polyglotica')">
           Переглянути всі екрани
@@ -1142,7 +1270,36 @@
       }
     });
   }, { rootMargin: '-30% 0px -60% 0px' });
-  sections.forEach(s => { if (s) navIo.observe(s); });
+  // ============ THEME TOGGLE ============
+  const themeBtn = document.getElementById('themeToggle');
+  function currentTheme() {
+    const explicit = document.documentElement.getAttribute('data-theme');
+    if (explicit) return explicit;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  themeBtn.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch(e) {}
+  });
+
+  // ============ BURGER MENU (mobile) ============
+  const burger = document.getElementById('burger');
+  const pnav = document.getElementById('pnav');
+  burger.addEventListener('click', e => {
+    e.stopPropagation();
+    pnav.classList.toggle('open');
+  });
+  // Close on link click
+  pnav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => pnav.classList.remove('open'));
+  });
+  // Close on outside click
+  document.addEventListener('click', e => {
+    if (!pnav.contains(e.target) && !burger.contains(e.target)) {
+      pnav.classList.remove('open');
+    }
+  });
 </script>
 
 </body>

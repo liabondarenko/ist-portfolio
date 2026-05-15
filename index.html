@@ -121,10 +121,10 @@
     color: var(--accent);
   }
   .lead {
-    font-size: 19px;
-    line-height: 1.55;
+    font-size: clamp(15px, 1.15vw, 18px);
+    line-height: 1.5;
     color: var(--ink-soft);
-    max-width: 620px;
+    max-width: min(880px, 90%);
     opacity: 0;
     animation: fadeUp 1s 0.35s forwards;
   }
@@ -552,7 +552,7 @@
 
   <header class="hero">
     <div class="eyebrow">Студентські проєкти · UI / UX</div>
-    <h1 class="title">Цифрові інтерфейси,<br>створені <em>студентами</em><br>нашої кафедри.</h1>
+    <h1 class="title">Цифрові інтерфейси, створені <br><em>студентами</em>нашої кафедри.</h1>
     <p class="lead">Добірка веб-проєктів з курсу проєктування інтерфейсів — від винного бутіку та кондитерської до освітніх платформ і блокчейн-порталу. Кожна робота — від концепції до фінального макета.</p>
   </header>
 
